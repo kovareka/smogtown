@@ -104,14 +104,6 @@ public class City {
         }
     }
 
-    public void switchBuilding(int index) {
-        if (buildings.containsKey(index)) {
-            buildings.put(index, new Building(index, false));
-        } else if (factories.containsKey(index)) {
-            factories.put(index, new Factory(index, false));
-        }
-    }
-
     public void createConstruction() {
         List<Integer> temp = new ArrayList<Integer>();
         temp.addAll(buildings.keySet());

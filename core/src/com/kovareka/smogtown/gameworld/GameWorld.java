@@ -32,17 +32,6 @@ public class GameWorld {
             sec = r.nextInt(15)+15;
         }
 
-        /*
-        for (Factory f : city.getFactories().values()) {
-            if (f.isWork() && f.checkCloud()) {
-                createCloud(f.getX(), f.getY());
-            }
-            if (f.isWork() && f.checkWork()) {
-                createConstruction();
-            }
-        }
-         */
-
         for (int i = 0; i < city.getIndexes().size(); i++) {
             if (city.getFactories().containsKey(city.getIndexes().get(i))) {
                 Factory f = city.getFactories().get(city.getIndexes().get(i));
@@ -54,44 +43,6 @@ public class GameWorld {
                 }
             }
         }
-
-        /*
-        for (Integer i : city.getIndexes()) {
-            if (city.getFactories().containsKey(i)) {
-                Cell c = city.getFactories().get(i);
-                if (c instanceof Construction) {
-                    if (((Construction)c).checkComplete()) {
-                        city.switchBuilding(i);
-                    }
-                }
-            } else if (city.getBuildings().containsKey(i)) {
-                Cell c = city.getBuildings().get(i);
-                if (c instanceof Construction) {
-                    if (((Construction)c).checkComplete()) {
-                        city.switchBuilding(i);
-                    }
-                }
-            }
-
-        }
-         */
-        /*
-        for (Cell c : city.getBuildings().values()) {
-            if (c instanceof Construction) {
-                if (((Construction) c).checkComplete()) {
-                    city.switchBuilding(c.getIndex());
-                }
-            }
-        }
-
-        for (Cell c : city.getFactories().values()) {
-            if (c instanceof Construction) {
-                if (((Construction) c).checkComplete()) {
-                    city.switchBuilding(c.getIndex());
-                }
-            }
-        }
-        */
 
         for (int i = 0; i < clouds.size(); i++) {
             if (clouds.get(i).getX() < 10 || clouds.get(i).getX() > 700

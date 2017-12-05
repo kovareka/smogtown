@@ -37,10 +37,6 @@ public class Cell {
         return height;
     }
 
-    public int getIndex() {
-        return index;
-    }
-
     public float getX() {
         return position.x;
     }

@@ -17,7 +17,7 @@ public class GameRenderer {
 
     private ShapeRenderer shapeRenderer;
     private SpriteBatch batch;
-    private static TextureRegion building, factory, construction, cloud1, cloud2;
+    private static TextureRegion building, factory, cloud1, cloud2;
     private static Animation factoryAnimation, constructionAnimation;
 
     public GameRenderer(GameWorld world) {
@@ -37,7 +37,6 @@ public class GameRenderer {
     private void initAssets() {
         building = AssetLoader.building;
         factory = AssetLoader.factory;
-        construction = AssetLoader.construction;
         cloud1 = AssetLoader.cloud1;
         cloud2 = AssetLoader.cloud2;
         factoryAnimation = AssetLoader.factoryAnimation;
