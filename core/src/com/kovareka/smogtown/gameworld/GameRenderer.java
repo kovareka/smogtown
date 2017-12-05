@@ -7,10 +7,11 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.kovareka.smogtown.gameobjects.*;
 import com.kovareka.smogtown.helpers.AssetLoader;
 
-import java.util.Collections;
+import java.util.*;
 
 public class GameRenderer {
     private GameWorld world;
@@ -69,38 +70,52 @@ public class GameRenderer {
     }
 
     private void drawCity(float runTime) {
-        Collections.sort(world.getCity().getIndexes());
+        List<Vector2> positions = world.getCity().getPositions();
+        positions.sort((c1, c2) -> {
+            if (c1.y > c2.y) {
+                return 1;
+            } else if (c1.y < c2.y){
+                return -1;
+            } else {
+                return 0;
+            }
+        });
 
-        for (Integer i : world.getCity().getIndexes()) {
-            if (world.getCity().getBuildings().containsKey(i)) {
-                Cell c = world.getCity().getBuildings().get(i);
-                if (c.isCompleted()) {
-                    batch.draw(building,
-                            world.getCity().getBuildings().get(i).getX(),
-                            world.getCity().getBuildings().get(i).getY(),
-                            world.getCity().getBuildings().get(i).getWidth(),
-                            world.getCity().getBuildings().get(i).getHeight());
-                } else {
-                    batch.draw((TextureRegion)constructionAnimation.getKeyFrame(runTime),
-                            world.getCity().getBuildings().get(i).getX(),
-                            world.getCity().getBuildings().get(i).getY(),
-                            world.getCity().getBuildings().get(i).getWidth(),
-                            world.getCity().getBuildings().get(i).getHeight());
+        for (Vector2 v : positions) {
+            for (int i = 0; i < world.getCity().getBuildings().size(); i++) {
+                Building b = world.getCity().getBuildings().get(i);
+                if (v.equals(b.getPosition())) {
+                    if (b.isCompleted()) {
+                        batch.draw(building,
+                                world.getCity().getBuildings().get(i).getX(),
+                                world.getCity().getBuildings().get(i).getY(),
+                                world.getCity().getBuildings().get(i).getWidth(),
+                                world.getCity().getBuildings().get(i).getHeight());
+                    } else {
+                        batch.draw((TextureRegion)constructionAnimation.getKeyFrame(runTime),
+                                world.getCity().getBuildings().get(i).getX(),
+                                world.getCity().getBuildings().get(i).getY(),
+                                world.getCity().getBuildings().get(i).getWidth(),
+                                world.getCity().getBuildings().get(i).getHeight());
+                    }
                 }
-            } else if (world.getCity().getFactories().containsKey(i)) {
-                Cell c = world.getCity().getFactories().get(i);
-                if (c.isCompleted()) {
-                    batch.draw(((Factory)c).isWork() ? (TextureRegion)factoryAnimation.getKeyFrame(runTime) : factory,
-                            world.getCity().getFactories().get(i).getX(),
-                            world.getCity().getFactories().get(i).getY(),
-                            world.getCity().getFactories().get(i).getWidth(),
-                            world.getCity().getFactories().get(i).getHeight());
-                } else {
-                    batch.draw((TextureRegion)constructionAnimation.getKeyFrame(runTime),
-                            world.getCity().getFactories().get(i).getX(),
-                            world.getCity().getFactories().get(i).getY(),
-                            world.getCity().getFactories().get(i).getWidth(),
-                            world.getCity().getFactories().get(i).getHeight());
+            }
+            for (int i = 0; i < world.getCity().getFactories().size(); i++) {
+                Factory f = world.getCity().getFactories().get(i);
+                if (v.equals(f.getPosition())) {
+                    if (f.isCompleted()) {
+                        batch.draw(f.isWork() ? (TextureRegion)factoryAnimation.getKeyFrame(runTime) : factory,
+                                world.getCity().getFactories().get(i).getX(),
+                                world.getCity().getFactories().get(i).getY(),
+                                world.getCity().getFactories().get(i).getWidth(),
+                                world.getCity().getFactories().get(i).getHeight());
+                    } else {
+                        batch.draw((TextureRegion)constructionAnimation.getKeyFrame(runTime),
+                                world.getCity().getFactories().get(i).getX(),
+                                world.getCity().getFactories().get(i).getY(),
+                                world.getCity().getFactories().get(i).getWidth(),
+                                world.getCity().getFactories().get(i).getHeight());
+                    }
                 }
             }
         }

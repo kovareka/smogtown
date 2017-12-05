@@ -1,145 +1,101 @@
 package com.kovareka.smogtown.gameobjects;
 
+import com.badlogic.gdx.math.Vector2;
+
 import java.util.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 public class City {
-    private Map<Integer, Building> buildings;
-    private Map<Integer, Factory> factories;
-    private List<Integer> indexes;
+    private List<Vector2> positions;
+    private List<Building> buildings;
+    private List<Factory> factories;
     private Random r;
 
     public City() {
-        this.buildings = new HashMap<Integer, Building>();
-        this.factories = new HashMap<Integer, Factory>();
-        this.indexes = new ArrayList<Integer>();
+        this.r = new Random();
         createCity();
     }
 
     private void createCity() {
-        this.r = new Random();
+        this.positions = new ArrayList<>();
+        this.buildings = new ArrayList<>();
+        this.factories = new ArrayList<>();
 
-        for (int i = 0; i < 3; i++) {
-            addNewBuildings();
-        }
-
-        addNewFactories();
+        buildings.add(new Building(new Vector2(355, 361), true));
+        positions.add(new Vector2(355, 361));
+        buildings.add(new Building(getNewPosition(), true));
+        buildings.add(new Building(getNewPosition(), true));
+        factories.add(new Factory(getNewFactoryPosition(), true));
     }
 
-    private void addNewBuildings() {
-        if (buildings.isEmpty()) {
-            buildings.put(189, new Building(189, true)); //24
-            indexes.add(189);
-        } else {
-            List<Integer> temp = new ArrayList<Integer>();
-            temp.addAll(buildings.keySet());
-            while (true) {
-                int currentIndex = temp.get(r.nextInt(temp.size()));
-                int index = checkNeighbours(currentIndex);
-                if (index != -1) {
-                    buildings.put(index, new Building(index, true));
-                    indexes.add(index);
-                    break;
+    private Vector2 getNewPosition() {
+        while (true) {
+            Building b = buildings.get(r.nextInt(buildings.size()));
+            List<Vector2> neighbours = getNeighbours(b.getPosition());
+            if (neighbours.size() > 0) {
+                Vector2 v = neighbours.get(r.nextInt(neighbours.size()));
+                positions.add(v);
+                return v;
+            }
+        }
+    }
+
+    private Vector2 getNewFactoryPosition() {
+        while (true) {
+            Building b = buildings.get(r.nextInt(buildings.size()));
+            List<Vector2> neighbours = getNeighbours(b.getPosition());
+            while (neighbours.size() > 0) {
+                Vector2 v = neighbours.get(r.nextInt(neighbours.size()));
+                List<Vector2> n = getNeighbours(v);
+                if (n.size() > 0) {
+                    Vector2 v1 = n.get(r.nextInt(n.size()));
+                    positions.add(v1);
+                    return v1;
                 }
             }
         }
     }
 
-    private void addNewFactories() {
-        List<Integer> temp = new ArrayList<Integer>();
-        temp.addAll(buildings.keySet());
-        while (true) {
-            int currentIndex = temp.get(r.nextInt(temp.size()));
-            int index = checkNeighboursFactory(currentIndex);
-            if (index != -1) {
-                factories.put(index, new Factory(index, true));
-                indexes.add(index);
+    private List<Vector2> getNeighbours(Vector2 start) {
+        float x = start.x;
+        float y = start.y;
+        List<Vector2> result = new ArrayList<>();
+
+        result.add(new Vector2(x + 45, y - 26));
+        result.add(new Vector2(x + 45, y + 26));
+        result.add(new Vector2(x - 45, y + 26));
+        result.add(new Vector2(x - 45, y - 26));
+
+        return result.stream().filter(v -> !positions.contains(v)).collect(Collectors.toList());
+    }
+
+    public void onClick(int screenX, int screenY) {
+        for (Factory f : factories) {
+            if (f.isCompleted() && screenX > f.getX() + 20 && screenX < f.getX() + 65
+                    && screenY > f.getY() + 20 && screenY < f.getY() + 65) {
+                f.switchFactory();
                 break;
             }
         }
     }
 
-    private int checkNeighbours(int index) {
-        if (!check(index - 1)) {
-            return index - 1;
-        } else if (!check(index - 19)) {
-            return index - 19;
-        } else if (!check(index + 1)) {
-            return index + 1;
-        } else if (!check(index + 19)) {
-            return index + 19;
+    public void addNewCell() {
+        if (buildings.size() != 3 && buildings.size() % 3 == 0 && factories.size()*3 != buildings.size()) {
+            factories.add(new Factory(getNewPosition(), false));
         } else {
-            return -1;
+            buildings.add(new Building(getNewPosition(), false));
         }
     }
 
-    private int checkNeighboursFactory(int index) {
-        if (!check(index - 1)) {
-            return index - 2;
-        } else if (!check(index - 19)) {
-            return index - 39;
-        } else if (!check(index + 1)) {
-            return index + 2;
-        } else if (!check(index + 19)) {
-            return index + 39;
-        } else {
-            return -1;
-        }
-    }
-
-    private boolean check(int index) {
-        return buildings.containsKey(index) || buildings.containsKey(index);
-    }
-
-    public void onClick(int screenX, int screenY) {
-        for (Cell f : factories.values()) {
-            if (f instanceof Factory) {
-                if (f.isCompleted() && screenX > f.getX() + 25 && screenX < f.getX() + 70
-                        && screenY > f.getY() + 25 && screenY < f.getY() + 70) {
-                    ((Factory)f).switchFactory();
-                    break;
-                }
-            }
-        }
-    }
-
-    public void createConstruction() {
-        List<Integer> temp = new ArrayList<Integer>();
-        temp.addAll(buildings.keySet());
-        while (true) {
-            int currentIndex = temp.get(r.nextInt(temp.size()));
-            if (buildings.size() != 3 && buildings.size() % 3 == 0 && factories.size()*3 != buildings.size()) {
-                int index = checkNeighboursFactory(currentIndex);
-                if (!indexes.contains(index)) {
-                    if (index != -1) {
-                        factories.put(index, new Factory(index, false));
-                        indexes.add(index);
-                        break;
-                    }
-                }
-            } else {
-                int index = checkNeighbours(currentIndex);
-                if (!indexes.contains(index)) {
-                    if (index != -1) {
-                        buildings.put(index, new Building(index, false));
-                        indexes.add(index);
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
-    public Map<Integer, Building> getBuildings() {
+    public List<Building> getBuildings() {
         return buildings;
     }
 
-    public Map<Integer, Factory> getFactories() {
+    public List<Factory> getFactories() {
         return factories;
     }
 
-    public List<Integer> getIndexes() {
-        return indexes;
+    public List<Vector2> getPositions() {
+        return positions;
     }
 }

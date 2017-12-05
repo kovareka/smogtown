@@ -1,16 +1,18 @@
 package com.kovareka.smogtown.gameobjects;
 
+import com.badlogic.gdx.math.Vector2;
+
 public class Factory extends Cell {
     private boolean isWork;
     private long startTime = 0;
     private long workTime = 0;
 
-    public Factory(int index, boolean completed) {
-        super(index, completed);
+    Factory(Vector2 position, boolean completed) {
+        super(position, completed);
         this.isWork = false;
     }
 
-    public void switchFactory() {
+    void switchFactory() {
         long time = System.currentTimeMillis();
         if (!isWork) {
             startTime = time + startTime;

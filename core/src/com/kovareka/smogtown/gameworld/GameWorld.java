@@ -17,7 +17,7 @@ public class GameWorld {
     public GameWorld() {
         this.city = new City();
         this.wind = new Wind();
-        this.clouds = new ArrayList<Cloud>();
+        this.clouds = new ArrayList<>();
         this.startTime = System.currentTimeMillis();
         this.r = new Random();
         this.sec = r.nextInt(25)+15;
@@ -32,15 +32,13 @@ public class GameWorld {
             sec = r.nextInt(15)+15;
         }
 
-        for (int i = 0; i < city.getIndexes().size(); i++) {
-            if (city.getFactories().containsKey(city.getIndexes().get(i))) {
-                Factory f = city.getFactories().get(city.getIndexes().get(i));
-                if (f.isWork() && f.checkCloud()) {
-                    createCloud(f.getX(), f.getY());
-                }
-                if (f.isWork() && f.checkWork()) {
-                    createConstruction();
-                }
+        for (int i = 0; i < city.getFactories().size(); i++) {
+            Factory f = city.getFactories().get(i);
+            if (f.isWork() && f.checkCloud()) {
+                createCloud(f.getX(), f.getY());
+            }
+            if (f.isWork() && f.checkWork()) {
+                city.addNewCell();
             }
         }
 
@@ -57,10 +55,6 @@ public class GameWorld {
 
     private void changeDirection() {
         wind.switchDirection();
-    }
-
-    private void createConstruction() {
-        city.createConstruction();
     }
 
     private void createCloud(float x, float y) {
