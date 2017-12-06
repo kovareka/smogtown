@@ -11,7 +11,7 @@ public class Wind {
 
     public Wind() {
         this.r = new Random();
-        this.speed = 20;
+        this.speed = 30;
         switchDirection();
     }
 

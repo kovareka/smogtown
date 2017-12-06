@@ -2,5 +2,5 @@ package com.kovareka.smogtown.helpers;
 
 public enum Direction {
     NORTH, NORTHWEST, WEST, SOUTHWEST,
-    SOUTH, SOUTHEAST, EAST, NORTEAST, NONE
+    SOUTH, SOUTHEAST, EAST, NORTHEAST, NONE
 }

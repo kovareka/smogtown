@@ -19,6 +19,7 @@ public class GameRenderer {
     private ShapeRenderer shapeRenderer;
     private SpriteBatch batch;
     private static TextureRegion building, factory, cloud1, cloud2;
+    private static TextureRegion arrowN, arrowNW, arrowW, arrowSW, arrowS, arrowSE, arrowE, arrowNE;
     private static Animation factoryAnimation, constructionAnimation;
 
     public GameRenderer(GameWorld world) {
@@ -40,6 +41,14 @@ public class GameRenderer {
         factory = AssetLoader.factory;
         cloud1 = AssetLoader.cloud1;
         cloud2 = AssetLoader.cloud2;
+        arrowN = AssetLoader.arrowN;
+        arrowNW = AssetLoader.arrowNW;
+        arrowW = AssetLoader.arrowW;
+        arrowSW = AssetLoader.arrowSW;
+        arrowS = AssetLoader.arrowS;
+        arrowSE = AssetLoader.arrowSE;
+        arrowE = AssetLoader.arrowE;
+        arrowNE = AssetLoader.arrowNE;
         factoryAnimation = AssetLoader.factoryAnimation;
         constructionAnimation = AssetLoader.constructionAnimation;
     }
@@ -56,6 +65,8 @@ public class GameRenderer {
         batch.begin();
         drawCity(runTime);
         drawCloud();
+        drawWindIndicator();
+        AssetLoader.font.draw(batch, String.valueOf((int)world.getResources() + "/" + String.valueOf((int) world.getResourcesForBuilding())), 0, 0);
         batch.end();
     }
 
@@ -66,6 +77,39 @@ public class GameRenderer {
                     c.getY(),
                     c.getWidth(),
                     c.getHeight());
+        }
+    }
+
+    private void drawWindIndicator() {
+        switch (world.getWind().getDirection()) {
+            case NORTH:
+                batch.draw(arrowN, 692, 50, 48, 48);
+                break;
+            case NORTHWEST:
+                batch.draw(arrowNW, 692, 50, 48, 48);
+                break;
+            case WEST:
+                batch.draw(arrowW, 692, 50, 48, 48);
+                break;
+            case SOUTHWEST:
+                batch.draw(arrowSW, 692, 50, 48, 48);
+                break;
+            case SOUTH:
+                batch.draw(arrowS, 692, 50, 48, 48);
+                break;
+            case SOUTHEAST:
+                batch.draw(arrowSE, 692, 50, 48, 48);
+                break;
+            case EAST:
+                batch.draw(arrowE, 692, 50, 48, 48);
+                break;
+            case NORTHEAST:
+                batch.draw(arrowNE, 692, 50, 48, 48);
+                break;
+            case NONE:
+                break;
+            default:
+                break;
         }
     }
 

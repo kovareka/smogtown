@@ -5,64 +5,120 @@ filter: Nearest,Nearest
 repeat: none
 building
   rotate: false
-  xy: 0, 0
+  xy: 0, 48
   size: 90, 77
   orig: 90, 77
   offset: 0, 0
   index: -1
 cloud1
   rotate: false
-  xy: 90, 0
+  xy: 90, 48
   size: 90, 77
   orig: 90, 77
   offset: 0, 0
   index: -1
 cloud2
   rotate: false
-  xy: 180, 0
+  xy: 180, 48
   size: 90, 77
   orig: 90, 77
   offset: 0, 0
   index: -1
 construction
   rotate: false
-  xy: 270, 0
+  xy: 270, 48
   size: 90, 77
   orig: 90, 77
   offset: 0, 0
   index: -1
 construction1
   rotate: false
-  xy: 360, 0
+  xy: 360, 48
   size: 90, 77
   orig: 90, 77
   offset: 0, 0
   index: -1
 construction2
   rotate: false
-  xy: 450, 0
+  xy: 450, 48
   size: 90, 77
   orig: 90, 77
   offset: 0, 0
   index: -1
 factory
   rotate: false
-  xy: 540, 0
+  xy: 540, 48
   size: 90, 77
   orig: 90, 77
   offset: 0, 0
   index: -1
 factory1
   rotate: false
-  xy: 630, 0
+  xy: 630, 48
   size: 90, 77
   orig: 90, 77
   offset: 0, 0
   index: -1
 factory2
   rotate: false
-  xy: 720, 0
+  xy: 720, 48
   size: 90, 77
   orig: 90, 77
+  offset: 0, 0
+  index: -1
+arrowSW
+  rotate: false
+  xy: 0, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+arrow_E
+  rotate: false
+  xy: 810, 77
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+arrow_N
+  rotate: false
+  xy: 48, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+arrow_NE
+  rotate: false
+  xy: 858, 77
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+arrow_NW
+  rotate: false
+  xy: 96, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+arrow_S
+  rotate: false
+  xy: 906, 77
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+arrow_SE
+  rotate: false
+  xy: 144, 0
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+arrow_W
+  rotate: false
+  xy: 954, 77
+  size: 48, 48
+  orig: 48, 48
   offset: 0, 0
   index: -1

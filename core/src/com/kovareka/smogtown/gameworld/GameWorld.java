@@ -7,28 +7,32 @@ import java.util.List;
 import java.util.Random;
 
 public class GameWorld {
+    private long windTime;
+    private Random r;
+    private int sec;
+
     private City city;
     private Wind wind;
     private List<Cloud> clouds;
-    private long startTime;
-    private Random r;
-    private int sec;
+    private double resources = 0;
+    private double resourcesForBuilding;
 
     public GameWorld() {
         this.city = new City();
         this.wind = new Wind();
         this.clouds = new ArrayList<>();
-        this.startTime = System.currentTimeMillis();
+        this.windTime = System.currentTimeMillis();
         this.r = new Random();
         this.sec = r.nextInt(25)+15;
+        this.resourcesForBuilding = city.getBuildings().size()*90*0.2;
     }
 
     public void update(float delta) {
         long temp = System.currentTimeMillis();
 
-        if (temp - startTime >= sec*1000) {
+        if (temp - windTime >= sec*1000) {
             changeDirection();
-            startTime = temp;
+            windTime = temp;
             sec = r.nextInt(15)+15;
         }
 
@@ -36,11 +40,11 @@ public class GameWorld {
             Factory f = city.getFactories().get(i);
             if (f.isWork() && f.checkCloud()) {
                 createCloud(f.getX(), f.getY());
-            }
-            if (f.isWork() && f.checkWork()) {
-                city.addNewCell();
+                resources += 33;
             }
         }
+
+        checkResourcesForNewBuilding();
 
         for (int i = 0; i < clouds.size(); i++) {
             if (clouds.get(i).getX() < 10 || clouds.get(i).getX() > 700
@@ -50,6 +54,15 @@ public class GameWorld {
                 continue;
             }
             clouds.get(i).update(delta, wind.getDirection());
+        }
+    }
+
+    private void checkResourcesForNewBuilding() {
+        double temp = city.getBuildings().size()*90*0.2;
+        if (resources - temp >= 0) {
+            resources -= temp;
+            city.addNewCell();
+            resourcesForBuilding = city.getBuildings().size()*90*0.2;
         }
     }
 
@@ -67,5 +80,17 @@ public class GameWorld {
 
     public List<Cloud> getClouds() {
         return clouds;
+    }
+
+    public Wind getWind() {
+        return wind;
+    }
+
+    public double getResources() {
+        return resources;
+    }
+
+    public double getResourcesForBuilding() {
+        return resourcesForBuilding;
     }
 }

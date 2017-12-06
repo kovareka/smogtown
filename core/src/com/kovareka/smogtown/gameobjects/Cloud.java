@@ -36,7 +36,7 @@ public class Cloud {
                 velocity.x = 0;
                 velocity.y = -speed;
                 break;
-            case NORTEAST:
+            case NORTHEAST:
                 velocity.x = speed;
                 velocity.y = -speed;
                 break;
