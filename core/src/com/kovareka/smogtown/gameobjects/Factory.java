@@ -34,7 +34,7 @@ public class Factory extends Cell {
     }
 
     public boolean checkCloud() {
-        if (System.currentTimeMillis() - startTime >= 7000) {
+        if (System.currentTimeMillis() - startTime >= 5000) {
             startTime = System.currentTimeMillis();
             return true;
         }
