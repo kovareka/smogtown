@@ -71,7 +71,7 @@ public class City {
 
     public void onClick(int screenX, int screenY) {
         for (Factory f : factories) {
-            if (f.isCompleted() && screenX > f.getX() + 20 && screenX < f.getX() + 65
+            if (f.isCompleted() && f.isClickable() && screenX > f.getX() + 20 && screenX < f.getX() + 65
                     && screenY > f.getY() + 20 && screenY < f.getY() + 65) {
                 f.switchFactory();
                 break;
