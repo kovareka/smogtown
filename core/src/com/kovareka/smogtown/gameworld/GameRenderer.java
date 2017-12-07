@@ -1,6 +1,7 @@
 package com.kovareka.smogtown.gameworld;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -68,6 +69,8 @@ public class GameRenderer {
         drawWindIndicator();
         AssetLoader.font.draw(batch, String.valueOf((int)world.getResources() + "/" + String.valueOf((int) world.getResourcesForBuilding())), 0, 0);
         batch.end();
+
+        drawSmogIndicator();
     }
 
     private void drawCloud() {
@@ -163,5 +166,24 @@ public class GameRenderer {
                 }
             }
         }
+    }
+
+    private void drawSmogIndicator() {
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        for (int i = 0; i < world.getCity().getFactories().size(); i++) {
+            Factory f = world.getCity().getFactories().get(i);
+            int t = f.getFullness();
+            if (t < 3) {
+                shapeRenderer.setColor(Color.GREEN);
+            } else if (t < 4) {
+                shapeRenderer.setColor(Color.YELLOW);
+            } else if (t < 5) {
+                shapeRenderer.setColor(Color.ORANGE);
+            } else {
+                shapeRenderer.setColor(Color.RED);
+            }
+            shapeRenderer.rect(f.getX() + 60, (f.getY() + 46 - 6*t), 10, t*6);
+        }
+        shapeRenderer.end();
     }
 }

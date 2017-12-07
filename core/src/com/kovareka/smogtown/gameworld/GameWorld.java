@@ -38,9 +38,13 @@ public class GameWorld {
 
         for (int i = 0; i < city.getFactories().size(); i++) {
             Factory f = city.getFactories().get(i);
-            if (f.isWork() && f.checkCloud()) {
+            if (f.isWork() && f.checkTimeWork()) {
                 createCloud(f.getX(), f.getY());
-                resources += 33;
+                resources += 44;
+            } else if (!f.isWork()) {
+                if (f.checkTimeOff()) {
+                    createCloud(f.getX(), f.getY());
+                }
             }
         }
 
