@@ -22,10 +22,10 @@ public class City {
     }
 
     private void createCity() {
-        this.upperLeftCorner = new Vector2(0, 0);
+        this.upperLeftCorner = new Vector2(0, 800);
         this.upperRightCorner = new Vector2(0, 0);
         this.lowerRightCorner = new Vector2(0, 0);
-        this.lowerLeftCorner = new Vector2(0, 0);
+        this.lowerLeftCorner = new Vector2(800, 0);
         this.positions = new ArrayList<>();
         this.buildings = new ArrayList<>();
         this.factories = new ArrayList<>();
@@ -101,19 +101,25 @@ public class City {
 
     private void checkBorderBuildings(Vector2 position) {
         if (position.y < upperLeftCorner.y) {
-            upperLeftCorner = position;
-        } else if (position.x > upperRightCorner.x) {
-            upperRightCorner = position;
+            upperLeftCorner.x = position.x;
+            upperLeftCorner.y = position.y;
         } else if (position.y > lowerRightCorner.y) {
-            lowerRightCorner = position;
-        } else if (position.x < lowerLeftCorner.x) {
-            lowerLeftCorner = position;
+            lowerRightCorner.x = position.x;
+            lowerRightCorner.y = position.y;
+        }
+
+        if (position.x > upperRightCorner.x) {
+            upperRightCorner.x = position.x;
+            upperRightCorner.y = position.y;
+        }  else if (position.x < lowerLeftCorner.x) {
+            lowerLeftCorner.x = position.x;
+            lowerLeftCorner.y = position.y;
         }
     }
 
     public boolean checkBorderCity(Vector2 position) {
-        return position.y < upperLeftCorner.y || position.x > upperRightCorner.x
-                || position.y > lowerRightCorner.y || position.x < lowerLeftCorner.x;
+        return position.y < upperLeftCorner.y - 140 || position.x > upperRightCorner.x + 180
+                || position.y > lowerRightCorner.y + 140  || position.x < lowerLeftCorner.x - 180;
     }
 
     public List<Building> getBuildings() {

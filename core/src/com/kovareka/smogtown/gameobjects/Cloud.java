@@ -77,6 +77,10 @@ public class Cloud {
         this.direction = direction;
     }
 
+    public Vector2 getPosition() {
+        return position;
+    }
+
     public float getX() {
         return position.x;
     }

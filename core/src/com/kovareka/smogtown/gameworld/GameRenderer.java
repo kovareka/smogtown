@@ -68,6 +68,8 @@ public class GameRenderer {
         drawCloud();
         drawWindIndicator();
         AssetLoader.font.draw(batch, String.valueOf((int)world.getResources() + "/" + String.valueOf((int) world.getResourcesForBuilding())), 0, 0);
+        AssetLoader.font.draw(batch, String.valueOf((int)world.getPopulations()), 0, 40);
+
         batch.end();
 
         drawSmogIndicator();

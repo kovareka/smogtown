@@ -16,6 +16,7 @@ public class GameWorld {
     private List<Cloud> clouds;
     private double resources = 0;
     private double resourcesForBuilding;
+    private float populations;
 
     public GameWorld() {
         this.city = new City();
@@ -25,9 +26,11 @@ public class GameWorld {
         this.r = new Random();
         this.sec = r.nextInt(25)+15;
         this.resourcesForBuilding = city.getBuildings().size()*90*0.2;
+        this.populations = this.city.getBuildings().size()*100;
     }
 
     public void update(float delta) {
+        populations += 0.15;
         long temp = System.currentTimeMillis();
 
         if (temp - windTime >= sec*1000) {
@@ -40,7 +43,7 @@ public class GameWorld {
             Factory f = city.getFactories().get(i);
             if (f.isWork() && f.checkTimeWork()) {
                 createCloud(f.getX(), f.getY());
-                resources += 44;
+                resources += 33;
             } else if (!f.isWork()) {
                 if (f.checkTimeOff()) {
                     createCloud(f.getX(), f.getY());
@@ -51,8 +54,7 @@ public class GameWorld {
         checkResourcesForNewBuilding();
 
         for (int i = 0; i < clouds.size(); i++) {
-            if (clouds.get(i).getX() < 10 || clouds.get(i).getX() > 700
-                    || clouds.get(i).getY() < 10 || clouds.get(i).getY() > 700) {
+            if (city.checkBorderCity(clouds.get(i).getPosition())) {
                 clouds.remove(i);
                 i--;
                 continue;
@@ -96,5 +98,9 @@ public class GameWorld {
 
     public double getResourcesForBuilding() {
         return resourcesForBuilding;
+    }
+
+    public float getPopulations() {
+        return populations;
     }
 }
