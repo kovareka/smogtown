@@ -9,6 +9,11 @@ public class City {
     private List<Vector2> positions;
     private List<Building> buildings;
     private List<Factory> factories;
+    private Vector2 upperLeftCorner;
+    private Vector2 upperRightCorner;
+    private Vector2 lowerRightCorner;
+    private Vector2 lowerLeftCorner;
+
     private Random r;
 
     public City() {
@@ -17,12 +22,17 @@ public class City {
     }
 
     private void createCity() {
+        this.upperLeftCorner = new Vector2(0, 0);
+        this.upperRightCorner = new Vector2(0, 0);
+        this.lowerRightCorner = new Vector2(0, 0);
+        this.lowerLeftCorner = new Vector2(0, 0);
         this.positions = new ArrayList<>();
         this.buildings = new ArrayList<>();
         this.factories = new ArrayList<>();
 
         buildings.add(new Building(new Vector2(355, 361), true));
         positions.add(new Vector2(355, 361));
+        checkBorderBuildings(new Vector2(355, 361));
         buildings.add(new Building(getNewPosition(), true));
         buildings.add(new Building(getNewPosition(), true));
         factories.add(new Factory(getNewFactoryPosition(), true));
@@ -35,6 +45,7 @@ public class City {
             if (neighbours.size() > 0) {
                 Vector2 v = neighbours.get(r.nextInt(neighbours.size()));
                 positions.add(v);
+                checkBorderBuildings(v);
                 return v;
             }
         }
@@ -50,6 +61,7 @@ public class City {
                 if (n.size() > 0) {
                     Vector2 v1 = n.get(r.nextInt(n.size()));
                     positions.add(v1);
+                    checkBorderBuildings(v1);
                     return v1;
                 }
             }
@@ -85,6 +97,23 @@ public class City {
         } else {
             buildings.add(new Building(getNewPosition(), false));
         }
+    }
+
+    private void checkBorderBuildings(Vector2 position) {
+        if (position.y < upperLeftCorner.y) {
+            upperLeftCorner = position;
+        } else if (position.x > upperRightCorner.x) {
+            upperRightCorner = position;
+        } else if (position.y > lowerRightCorner.y) {
+            lowerRightCorner = position;
+        } else if (position.x < lowerLeftCorner.x) {
+            lowerLeftCorner = position;
+        }
+    }
+
+    public boolean checkBorderCity(Vector2 position) {
+        return position.y < upperLeftCorner.y || position.x > upperRightCorner.x
+                || position.y > lowerRightCorner.y || position.x < lowerLeftCorner.x;
     }
 
     public List<Building> getBuildings() {
