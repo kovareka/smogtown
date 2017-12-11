@@ -1,5 +1,6 @@
 package com.kovareka.smogtown.gameobjects;
 
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.kovareka.smogtown.helpers.Direction;
 
@@ -11,8 +12,9 @@ public class Cloud {
     private Direction direction;
     private int speed;
     private int ind;
-
     private int width, height;
+
+    private Rectangle rect;
 
     public Cloud(float x, float y, Direction direction, int speed) {
         this.position = new Vector2(x, y);
@@ -22,12 +24,14 @@ public class Cloud {
         this.width = 90;
         this.height = 77;
         this.ind = new Random().nextInt(2);
+        this.rect = new Rectangle(x+4, y, 82, 77);
     }
 
     public void update(float delta, Direction direction) {
         this.direction = direction;
         setVelocity();
         position.add(velocity.cpy().scl(delta));
+        rect.setPosition(position.x, position.y);
     }
 
     private void setVelocity() {
@@ -99,5 +103,9 @@ public class Cloud {
 
     public int getInd() {
         return ind;
+    }
+
+    public Rectangle getRect() {
+        return rect;
     }
 }

@@ -1,6 +1,8 @@
 package com.kovareka.smogtown.gameworld;
 
+import com.badlogic.gdx.math.Intersector;
 import com.kovareka.smogtown.gameobjects.*;
+import com.kovareka.smogtown.helpers.Direction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +18,7 @@ public class GameWorld {
     private List<Cloud> clouds;
     private double resources = 0;
     private double resourcesForBuilding;
-    private float populations;
+    private float population;
 
     public GameWorld() {
         this.city = new City();
@@ -25,20 +27,45 @@ public class GameWorld {
         this.windTime = System.currentTimeMillis();
         this.r = new Random();
         this.sec = r.nextInt(25)+15;
-        this.resourcesForBuilding = city.getBuildings().size()*90*0.2;
-        this.populations = this.city.getBuildings().size()*100;
+        this.resourcesForBuilding = city.getBuildings().size()*90*0.31;
+        this.population = this.city.getBuildings().size()*100;
     }
 
     public void update(float delta) {
-        populations += 0.15;
-        long temp = System.currentTimeMillis();
+        population += 0.13;
 
-        if (temp - windTime >= sec*1000) {
-            changeDirection();
-            windTime = temp;
-            sec = r.nextInt(15)+15;
+        checkWind();
+        checkFactories();
+        checkResourcesForNewBuilding();
+
+        for (int i = 0; i < clouds.size(); i++) {
+            if (city.checkBorderCity(clouds.get(i).getPosition())) {
+                clouds.remove(i);
+                i--;
+                continue;
+            }
+            clouds.get(i).update(delta, wind.getDirection());
         }
+        checkDissatisfied();
+    }
 
+    private void checkDissatisfied() {
+        label: for (int i = 0; i < city.getBuildings().size(); i++) {
+            for (int k = 0; k < clouds.size(); k++) {
+                if (city.getBuildings().get(i).isCompleted()) {
+                    if (Intersector.overlaps(clouds.get(k).getRect(), city.getBuildings().get(i).getRect())) {
+                        city.getBuildings().get(i).addDissatisfied(1);
+                        continue label;
+                    }
+                }
+            }
+            if (city.getBuildings().get(i).getDissatisfied() != 0) {
+                city.getBuildings().get(i).reduceDissatisfied();
+            }
+        }
+    }
+
+    private void checkFactories() {
         for (int i = 0; i < city.getFactories().size(); i++) {
             Factory f = city.getFactories().get(i);
             if (f.isWork() && f.checkTimeWork()) {
@@ -50,30 +77,26 @@ public class GameWorld {
                 }
             }
         }
-
-        checkResourcesForNewBuilding();
-
-        for (int i = 0; i < clouds.size(); i++) {
-            if (city.checkBorderCity(clouds.get(i).getPosition())) {
-                clouds.remove(i);
-                i--;
-                continue;
-            }
-            clouds.get(i).update(delta, wind.getDirection());
-        }
     }
 
     private void checkResourcesForNewBuilding() {
-        double temp = city.getBuildings().size()*90*0.2;
+        double temp = city.getBuildings().size()*90*0.31;
         if (resources - temp >= 0) {
             resources -= temp;
             city.addNewCell();
-            resourcesForBuilding = city.getBuildings().size()*90*0.2;
+            resourcesForBuilding = city.getBuildings().size()*90*0.31;
         }
     }
 
-    private void changeDirection() {
-        wind.switchDirection();
+    private void checkWind() {
+        long temp = System.currentTimeMillis();
+
+        if (temp - windTime >= sec*1000) {
+            wind.switchDirection();
+            windTime = temp;
+            sec = r.nextInt(15);
+            if (wind.getDirection() != Direction.NONE) sec += 10;
+        }
     }
 
     private void createCloud(float x, float y) {
@@ -100,7 +123,19 @@ public class GameWorld {
         return resourcesForBuilding;
     }
 
-    public float getPopulations() {
-        return populations;
+    public float getPopulation() {
+        return population;
+    }
+
+    public int getDissatisfied() {
+        float result = 0;
+
+        for (int i = 0; i < city.getBuildings().size(); i++) {
+            result += city.getBuildings().get(i).getDissatisfied();
+        }
+
+        float t = (int)(population - city.getBuildings().size())/100;
+
+        return (int)(result + t*2);
     }
 }

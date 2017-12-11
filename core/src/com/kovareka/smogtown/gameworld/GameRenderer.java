@@ -68,7 +68,8 @@ public class GameRenderer {
         drawCloud();
         drawWindIndicator();
         AssetLoader.font.draw(batch, String.valueOf((int)world.getResources() + "/" + String.valueOf((int) world.getResourcesForBuilding())), 0, 0);
-        AssetLoader.font.draw(batch, String.valueOf((int)world.getPopulations()), 0, 40);
+        AssetLoader.font.draw(batch, String.valueOf((int)world.getPopulation()) + "/" +String.valueOf(world.getCity().getBuildings().size()*100), 0, 40);
+        AssetLoader.font.draw(batch, String.valueOf((int)((world.getDissatisfied() / (world.getPopulation()-20))*100) + "%"), 0, 80);
 
         batch.end();
 
