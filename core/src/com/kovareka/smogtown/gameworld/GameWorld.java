@@ -19,19 +19,32 @@ public class GameWorld {
     private double resources = 0;
     private double resourcesForBuilding;
     private float population;
+    private GameState currentState;
+
+    public enum GameState {
+        READY, RUNNING, GAMEOVER
+    }
 
     public GameWorld() {
-        this.city = new City();
-        this.wind = new Wind();
-        this.clouds = new ArrayList<>();
-        this.windTime = System.currentTimeMillis();
-        this.r = new Random();
-        this.sec = r.nextInt(25)+15;
-        this.resourcesForBuilding = city.getBuildings().size()*90*0.31;
-        this.population = this.city.getBuildings().size()*100;
+        startNewGame();
+        this.currentState = GameState.READY;
     }
 
     public void update(float delta) {
+        switch (currentState) {
+            case READY:
+                break;
+            case RUNNING:
+                updateRunning(delta);
+                break;
+            case GAMEOVER:
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void updateRunning(float delta) {
         population += 0.13;
 
         checkWind();
@@ -47,6 +60,26 @@ public class GameWorld {
             clouds.get(i).update(delta, wind.getDirection());
         }
         checkDissatisfied();
+
+        if ((int)((getDissatisfied() / (population-20))*100) >= 100) {
+            currentState = GameState.GAMEOVER;
+        }
+    }
+
+    private void startNewGame() {
+        this.city = new City();
+        this.wind = new Wind();
+        this.clouds = new ArrayList<>();
+        this.windTime = System.currentTimeMillis();
+        this.r = new Random();
+        this.sec = r.nextInt(25)+15;
+        this.resourcesForBuilding = city.getBuildings().size()*90*0.31;
+        this.population = this.city.getBuildings().size()*100;
+    }
+
+    public void restart() {
+        startNewGame();
+        this.currentState = GameState.RUNNING;
     }
 
     private void checkDissatisfied() {
@@ -137,5 +170,17 @@ public class GameWorld {
         float t = (int)(population - city.getBuildings().size())/100;
 
         return (int)(result + t*2);
+    }
+
+    public boolean isReady() {
+        return currentState == GameState.READY;
+    }
+
+    public boolean isRunning() {
+        return currentState == GameState.RUNNING;
+    }
+
+    public boolean isGameOver() {
+        return currentState == GameState.GAMEOVER;
     }
 }

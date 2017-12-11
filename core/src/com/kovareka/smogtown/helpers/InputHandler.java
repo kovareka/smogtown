@@ -27,7 +27,11 @@ public class InputHandler implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        world.getCity().onClick(screenX, screenY);
+        if (world.isRunning()) {
+            world.getCity().onClick(screenX, screenY);
+        } else if (world.isReady() || world.isGameOver()) {
+            world.restart();
+        }
         return true;
     }
 

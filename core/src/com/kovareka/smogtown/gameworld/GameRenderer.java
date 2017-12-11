@@ -64,13 +64,20 @@ public class GameRenderer {
         shapeRenderer.end();
 
         batch.begin();
-        drawCity(runTime);
-        drawCloud();
-        drawWindIndicator();
-        AssetLoader.font.draw(batch, String.valueOf((int)world.getResources() + "/" + String.valueOf((int) world.getResourcesForBuilding())), 0, 0);
-        AssetLoader.font.draw(batch, String.valueOf((int)world.getPopulation()) + "/" +String.valueOf(world.getCity().getBuildings().size()*100), 0, 40);
-        AssetLoader.font.draw(batch, String.valueOf((int)((world.getDissatisfied() / (world.getPopulation()-20))*100) + "%"), 0, 80);
-
+        if (world.isRunning()) {
+            drawCity(runTime);
+            drawCloud();
+            drawWindIndicator();
+            AssetLoader.font.draw(batch, String.valueOf((int)world.getResources() + "/" + String.valueOf((int) world.getResourcesForBuilding())), 0, 0);
+            AssetLoader.font.draw(batch, String.valueOf((int)world.getPopulation()) + "/" +String.valueOf(world.getCity().getBuildings().size()*100), 0, 40);
+            AssetLoader.font.draw(batch, String.valueOf((int)((world.getDissatisfied() / (world.getPopulation()-20))*100) + "%"), 0, 80);
+        } else if (world.isReady()) {
+            AssetLoader.font.draw(batch,"SMOGTOWN", 320, 300);
+            AssetLoader.font.draw(batch, "Play", 370, 400);
+        } else if (world.isGameOver()) {
+            AssetLoader.font.draw(batch,"You lose :(", 320, 350);
+            AssetLoader.font.draw(batch,"try again", 330, 400);
+        }
         batch.end();
 
         drawSmogIndicator();
